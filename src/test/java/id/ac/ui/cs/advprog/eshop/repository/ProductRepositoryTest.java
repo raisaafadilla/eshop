@@ -22,7 +22,7 @@ class ProductRepositoryTest {
 
     @Test
     void testCreateAndFind() {
-        Product product = new Product;
+        Product product = new Product();
         product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
@@ -52,7 +52,7 @@ class ProductRepositoryTest {
 
         Product product2 = new Product();
         product2.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
-        product2.setProductName("Sampo Cap Usep.");
+        product2.setProductName("Sampo Cap Usep");
         product2.setProductQuantity(50);
         productRepository.create(product2);
 
