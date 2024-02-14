@@ -15,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
 
 class ProductServiceTest {
 
@@ -55,4 +56,29 @@ class ProductServiceTest {
         assertTrue(foundProducts.contains(product));
         verify(productRepository, times(1)).findAll();
     }
+
+    @Test
+    void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductId("1");
+
+        doNothing().when(productRepository).deleteProduct(product);
+
+        productService.deleteById(product);
+
+        verify(productRepository, times(1)).deleteProduct(product);
+    }
+
+    @Test
+    void testEditProduct() {
+        Product product = new Product();
+        product.setProductId("1");
+
+        doNothing().when(productRepository).edit(product);
+
+        productService.edit(product);
+
+        verify(productRepository, times(1)).edit(product);
+    }
+
 }
