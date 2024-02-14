@@ -12,6 +12,13 @@ public class ProductRepository {
     private List<Product> productData = new ArrayList<>();
 
     public Product create(Product product) {
+        if (product.getProductId() == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
+        if (product.getProductQuantity() < 0) {
+            throw new IllegalArgumentException("Product quantity cannot be negative");
+        }
+
         productData.add(product);
         return product;
     }
