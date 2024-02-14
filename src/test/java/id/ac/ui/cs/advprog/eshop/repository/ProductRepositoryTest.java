@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import java.util.NoSuchElementException;
 
 import java.util.Iterator;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,5 +64,97 @@ class ProductRepositoryTest {
         savedProduct = productIterator.next();
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testCreateWithNullId() {
+        Product product = new Product();
+        product.setProductId(null); // Set ID to null
+        product.setProductName("Null ID Product");
+        product.setProductQuantity(50);
+
+        // Try to create the product with a null ID
+        assertThrows(IllegalArgumentException.class, () -> productRepository.create(product));
+    }
+
+    @Test
+    void testCreateWithNegativeQuantity() {
+        Product product = new Product();
+        product.setProductId("test-id");
+        product.setProductName("Negative Quantity Product");
+        product.setProductQuantity(-10); // Set negative quantity
+
+        // Try to create the product with a negative quantity
+        assertThrows(IllegalArgumentException.class, () -> productRepository.create(product));
+    }
+
+    @Test
+    void testEditProduct() {
+        // Create a product
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Product 1");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        // Edit the product
+        Product editedProduct = new Product();
+        editedProduct.setProductId("1");
+        editedProduct.setProductName("Edited Product");
+        editedProduct.setProductQuantity(20);
+        productRepository.edit(editedProduct);
+
+        // Check if the product is edited correctly
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+        Product savedProduct = productIterator.next();
+        assertEquals(editedProduct.getProductId(), savedProduct.getProductId());
+        assertEquals(editedProduct.getProductName(), savedProduct.getProductName());
+        assertEquals(editedProduct.getProductQuantity(), savedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testDeleteProduct() {
+        // Create a product
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Product 1");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        // Delete the product
+        productRepository.deleteProduct(product);
+
+        // Ensure the product is no longer in the repository
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertFalse(productIterator.hasNext());
+
+        // Attempt to retrieve the deleted product should throw NoSuchElementException
+        assertThrows(NoSuchElementException.class, () -> {
+            productIterator.next();
+        });
+    }
+
+    @Test
+    void testEditNonExistingProduct() {
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Product 1");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        Product modifiedProduct = new Product();
+        modifiedProduct.setProductId("2");
+        modifiedProduct.setProductName("Modified Product");
+        modifiedProduct.setProductQuantity(20);
+
+        productRepository.edit(modifiedProduct);
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
+        Product foundProduct = productIterator.next();
+        assertEquals(product.getProductId(), foundProduct.getProductId());
+        assertEquals(product.getProductName(), foundProduct.getProductName());
+        assertEquals(product.getProductQuantity(), foundProduct.getProductQuantity());
     }
 }
