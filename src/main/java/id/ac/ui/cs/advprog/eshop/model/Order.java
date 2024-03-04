@@ -2,9 +2,7 @@ package id.ac.ui.cs.advprog.eshop.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
