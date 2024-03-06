@@ -69,7 +69,7 @@ public class PaymentRepositoryTest {
         Payment payment1 = payments.get(1);
         paymentRepository.save(payment1);
 
-        Payment newPayment = new Payment(payment1.getId(), payment1.getOrder(), payment1.getMethod(), payment1.getPaymentData());
+        Payment newPayment = new Payment(payment1.getId(), payment1.getMethod(), payment1.getOrder(), payment1.getPaymentData());
         Payment result = paymentRepository.save(newPayment);
 
         Payment findResult = paymentRepository.findById(payments.get(1).getId());
